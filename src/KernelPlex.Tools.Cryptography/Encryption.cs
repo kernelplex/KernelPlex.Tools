@@ -76,7 +76,7 @@ public static class Encryption
     /// <summary>
     /// Decrypts an encrypted string using the provided key.
     /// </summary>
-    /// <param name="source">The encrypted string to be decrypted.</param>
+    /// <param name="sourceBytes"></param>
     /// <param name="key">The decryption key.</param>
     /// <returns>The decrypted string.</returns>
     public static byte[] Decrypt(byte[] sourceBytes, byte[] key)

@@ -93,12 +93,12 @@ public static class HashGenerator
             Array.Copy(pepperBytes, 0, saltAndPepper, saltBytes.Length, pepperBytes.Length);
         }
         
-        var argon2id = new Argon2id(passwordBytes);
-        argon2id.Iterations = 2;
-        argon2id.MemorySize = 8192;
-        argon2id.DegreeOfParallelism = 1;
-        argon2id.Salt = saltAndPepper;
-        var digest = argon2id.GetBytes(24);
+        var argon2Id = new Argon2id(passwordBytes);
+        argon2Id.Iterations = 2;
+        argon2Id.MemorySize = 8192;
+        argon2Id.DegreeOfParallelism = 1;
+        argon2Id.Salt = saltAndPepper;
+        var digest = argon2Id.GetBytes(24);
         return Convert.ToBase64String(digest) + "$" + Convert.ToBase64String(saltBytes);
     }
 
