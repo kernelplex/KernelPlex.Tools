@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KernelPlex.Tools.Cryptography", "src\KernelPlex.Tools.Cryptography\KernelPlex.Tools.Cryptography.csproj", "{2F7BB9C0-0FA2-4A57-9658-862CD022C7F0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3C916235-44B4-4671-82FF-A458980A2606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KernelPlex.Tools.Cryptography.Tests", "KernelPlex.Tools.Cryptography.Tests\KernelPlex.Tools.Cryptography.Tests.csproj", "{31BE5BE9-06B7-4531-B4BB-D528F4D2A74B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,12 @@ Global
 		{2F7BB9C0-0FA2-4A57-9658-862CD022C7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F7BB9C0-0FA2-4A57-9658-862CD022C7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F7BB9C0-0FA2-4A57-9658-862CD022C7F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31BE5BE9-06B7-4531-B4BB-D528F4D2A74B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31BE5BE9-06B7-4531-B4BB-D528F4D2A74B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31BE5BE9-06B7-4531-B4BB-D528F4D2A74B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31BE5BE9-06B7-4531-B4BB-D528F4D2A74B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{31BE5BE9-06B7-4531-B4BB-D528F4D2A74B} = {3C916235-44B4-4671-82FF-A458980A2606}
 	EndGlobalSection
 EndGlobal
