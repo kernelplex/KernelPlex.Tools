@@ -78,5 +78,27 @@ public class HashGeneratorTest
 
         act.Should().Throw<InvalidOperationException>();
     }
+
+    [Fact]
+    public void Verify_ShouldWorkWithBase64_Pepper()
+    {
+        var pepper64 = HashGenerator.GenerateBase64Spice();
+        var hashedPassword = HashGenerator.HashPassword(this.secret, pepper64);
+
+        var result = HashGenerator.Verify(hashedPassword, secret, pepper64);
+
+        result.Should().BeTrue();
+    }
+    
+    [Fact]
+    public void Verify_ShouldFailWhenNoPepperProvided()
+    {
+        var pepper64 = HashGenerator.GenerateBase64Spice();
+        var hashedPassword = HashGenerator.HashPassword(this.secret, pepper64);
+
+        var result = HashGenerator.Verify(hashedPassword, secret);
+
+        result.Should().BeFalse();
+    }
 }
 

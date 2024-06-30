@@ -21,6 +21,33 @@ public static class HashGenerator
 
 
     /// <summary>
+    /// Generates a base64-encoded spice of the specified size.
+    /// </summary>
+    /// <param name="size">The size of the spice in bytes. Defaults to 32.</param>
+    /// <returns>A base64-encoded string representing the generated spice.</returns>
+    public static string GenerateBase64Spice(int size = 32)
+    {
+        var bytes = GenerateSpice(size);
+        return Convert.ToBase64String(bytes);
+    }
+
+
+    /// <summary>
+    /// Verifies a hashed password with the provided password and pepper bytes.
+    /// </summary>
+    /// <param name="hashedPassword">The hashed password to be verified.</param>
+    /// <param name="password">The password to check against the hashed password.</param>
+    /// <param name="base64Pepper">The base-64 pepper used to hash the password.</param>
+    /// <returns>True if the password matches the hashed password, otherwise false.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the hashed password does not contain salt.</exception>
+    public static bool Verify(string hashedPassword, string password, string base64Pepper)
+    {
+        var pepperBytes = Convert.FromBase64String(base64Pepper);
+        return Verify(hashedPassword, password, pepperBytes);
+    }
+
+
+    /// <summary>
     /// Verifies a hashed password with the provided password and pepper bytes.
     /// </summary>
     /// <param name="hashedPassword">The hashed password to be verified.</param>
@@ -41,6 +68,18 @@ public static class HashGenerator
         var passwordBytes = Encoding.UTF8.GetBytes(password); 
         var verifiedHash = HashPassword(passwordBytes, saltBytes, pepperBytes);
         return verifiedHash == hashedPassword;
+    }
+
+    /// <summary>
+    /// Hashes a password using salt and pepper.
+    /// </summary>
+    /// <param name="password">The password to be hashed.</param>
+    /// <param name="base64Pepper">The base-64 pepper to use.</param>
+    /// <returns>The hashed password.</returns>
+    public static string HashPassword(string password, string base64Pepper)
+    {
+        var pepperBytes = Convert.FromBase64String(base64Pepper);
+        return HashPassword(password, pepperBytes);
     }
 
     /// <summary>
