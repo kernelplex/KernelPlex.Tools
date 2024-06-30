@@ -4,101 +4,39 @@ namespace KernelPlex.Tools.Cryptography.Tests;
 
 public class HashGeneratorTest
 {
+    private string _secret = "Hunter2";
+    private string _badSecret = "Hunter3";
+    private string _pepper = "+Z3mn111bReUfxryxsu9NzQplVOzydDYOHcuH1rUa0I=";
 
-    private readonly string secret = "Hunter2";
-    private readonly string badSecret = "Hunter3";
-    private readonly byte[] _pepper;
+    private HashGenerator iut;
 
     public HashGeneratorTest()
     {
-        _pepper = HashGenerator.GenerateSpice();
+        iut = new HashGenerator(_pepper);
     }
 
     [Fact]
-    public void Verify_WithoutPepper_ShouldVerify()
+    public void HashPassword_ShouldGenerateDifferentHashesForTheSameSecret()
     {
-        var hashedSecret = HashGenerator.HashPassword(secret);
-
-        HashGenerator.Verify(hashedSecret, secret).Should().BeTrue();
-    }
-    
-    [Fact]
-    public void Verify_WithPepper_ShouldVerify()
-    {
-        var hashedSecret = HashGenerator.HashPassword(secret, _pepper);
-
-        HashGenerator.Verify(hashedSecret, secret, _pepper).Should().BeTrue();
-    }
-    
-    [Fact]
-    public void Verify_WithPepper_ShouldNOtVerifyIfSecretMismatched()
-    {
-        var hashedSecret = HashGenerator.HashPassword(secret, _pepper);
-
-        HashGenerator.Verify(hashedSecret, badSecret, _pepper).Should().BeFalse();
-    }
-
-
-    [Fact]
-    public void HashPassword_MultipleTimesWithSamePassword_GeneratesDifferentResults()
-    {
-        var firstHash = HashGenerator.HashPassword(secret);
-        var secondHash = HashGenerator.HashPassword(secret);
+        var firstHash = iut.HashPassword(_secret);
+        var secondHash = iut.HashPassword(_secret);
 
         firstHash.Should().NotBe(secondHash);
     }
     
     [Fact]
-    public void Verify_ShouldNotMatchWhenPepperIsMissing()
+    public void Verify_ShouldReturnTrueIfSecretsMatch()
     {
-        var hashedPassword = HashGenerator.HashPassword("Hunter2", _pepper);
-
-        var result = HashGenerator.Verify(hashedPassword, "Hunter2");
-        result.Should().BeFalse();
-    }
-
-    [Fact]
-    public void Verify_ShouldThrowIfBadHashPassed()
-    {
-        var badHash = "qpwoeiweporiuoqweiur";
-
-        var act = () => HashGenerator.Verify(badHash, secret);
-
-        act.Should().Throw<InvalidOperationException>();
-
+        var hash = iut.HashPassword(_secret);
+        var verified = iut.verify(_secret, hash);
+        verified.Should().BeTrue();
     }
     
     [Fact]
-    public void Verify_ShouldThrowIfSaltMissing()
+    public void Verify_ShouldShouldReturnFalseIfSecretsDoNotMatch()
     {
-        var hashedPassword = HashGenerator.HashPassword("Hunter2", _pepper);
-        var parts = hashedPassword.Split('$', 2);
-
-        var act = () => HashGenerator.Verify(parts[0], "Hunter2");
-
-        act.Should().Throw<InvalidOperationException>();
-    }
-
-    [Fact]
-    public void Verify_ShouldWorkWithBase64_Pepper()
-    {
-        var pepper64 = HashGenerator.GenerateBase64Spice();
-        var hashedPassword = HashGenerator.HashPassword(this.secret, pepper64);
-
-        var result = HashGenerator.Verify(hashedPassword, secret, pepper64);
-
-        result.Should().BeTrue();
-    }
-    
-    [Fact]
-    public void Verify_ShouldFailWhenNoPepperProvided()
-    {
-        var pepper64 = HashGenerator.GenerateBase64Spice();
-        var hashedPassword = HashGenerator.HashPassword(this.secret, pepper64);
-
-        var result = HashGenerator.Verify(hashedPassword, secret);
-
-        result.Should().BeFalse();
+        var hash = iut.HashPassword(_secret);
+        var verified = iut.verify(_badSecret, hash);
+        verified.Should().BeFalse();
     }
 }
-

@@ -14,8 +14,8 @@ public class EncryptionTest
 
     public EncryptionTest()
     {
-        _key = HashGenerator.GenerateSpice();
-        _badKey = HashGenerator.GenerateSpice();
+        _key = HashGeneration.GenerateSpice();
+        _badKey = HashGeneration.GenerateSpice();
 
         // Just in case we get (un)lucky.
         Assert.NotEqual(_key, _badKey);
