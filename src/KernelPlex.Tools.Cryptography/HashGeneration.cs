@@ -8,6 +8,7 @@ using Konscious.Security.Cryptography;
 /// </summary>
 public static class HashGeneration
 {
+    public const char SaltDelimiter = '.'; 
     
     /// <summary>
     /// Can be used to generate salt and pepper.
@@ -57,7 +58,7 @@ public static class HashGeneration
     /// <exception cref="InvalidOperationException">Thrown when the hashed password does not contain salt.</exception>
     public static bool Verify(string hashedPassword, string password, byte[]? pepperBytes = null)
     {
-        var split = hashedPassword.Split('$', 2);
+        var split = hashedPassword.Split(SaltDelimiter, 2);
         if (split.Length != 2)
         {
             throw new InvalidOperationException("Password hash does not contain salt.");
@@ -83,28 +84,16 @@ public static class HashGeneration
     }
 
     /// <summary>
-    /// Hashes a password using salt and pepper.
+    /// Hashes a password using Argon2id algorithm and generates a unique salt.
     /// </summary>
     /// <param name="password">The password to be hashed.</param>
     /// <param name="pepperBytes">The pepper bytes to be included in the hash.</param>
     /// <returns>The hashed password.</returns>
-    public static string HashPassword(string password, byte[] pepperBytes)
+    public static string HashPassword(string password, byte[]? pepperBytes = null)
     {
         var passwordBytes = Encoding.UTF8.GetBytes(password);
         var saltBytes = GenerateSpice();
         return HashPassword(passwordBytes, saltBytes, pepperBytes);
-    }
-
-    /// <summary>
-    /// Hashes a password using Argon2id algorithm and generates a unique salt.
-    /// </summary>
-    /// <param name="password">The password to be hashed.</param>
-    /// <returns>The hashed password concatenated with the generated salt.</returns>
-    public static string HashPassword(string password)
-    {
-        var passwordBytes = Encoding.UTF8.GetBytes(password);
-        var saltBytes = GenerateSpice();
-        return HashPassword(passwordBytes, saltBytes);
     }
 
     /// <summary>
@@ -116,15 +105,8 @@ public static class HashGeneration
     /// <returns>The hashed password as a base64-encoded string, concatenated with the salt.</returns>
     public static string HashPassword(byte[] passwordBytes, byte[] saltBytes, byte[]? pepperBytes = null)
     {
-        byte[] saltAndPepper;
-        if (pepperBytes is null)
-        {
-            saltAndPepper= new byte[saltBytes.Length]; 
-        }
-        else
-        {
-            saltAndPepper= new byte[saltBytes.Length + pepperBytes.Length]; 
-        }
+        var saltAndPepper = pepperBytes is null ? new byte[saltBytes.Length] : 
+            new byte[saltBytes.Length + pepperBytes.Length];
         
         Array.Copy(saltBytes, saltAndPepper, saltBytes.Length);
         if (pepperBytes is not null)
@@ -138,6 +120,6 @@ public static class HashGeneration
         argon2Id.DegreeOfParallelism = 1;
         argon2Id.Salt = saltAndPepper;
         var digest = argon2Id.GetBytes(24);
-        return Convert.ToBase64String(digest) + "$" + Convert.ToBase64String(saltBytes);
+        return Convert.ToBase64String(digest) + SaltDelimiter + Convert.ToBase64String(saltBytes);
     }
 }

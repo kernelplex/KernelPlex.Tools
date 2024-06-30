@@ -4,9 +4,9 @@ namespace KernelPlex.Tools.Cryptography.Tests;
 
 public class HashGeneratorTest
 {
-    private string _secret = "Hunter2";
-    private string _badSecret = "Hunter3";
-    private string _pepper = "+Z3mn111bReUfxryxsu9NzQplVOzydDYOHcuH1rUa0I=";
+    private readonly string _secret = "Hunter2";
+    private readonly string _badSecret = "Hunter3";
+    private readonly string _pepper = "+Z3mn111bReUfxryxsu9NzQplVOzydDYOHcuH1rUa0I=";
 
     private HashGenerator iut;
 

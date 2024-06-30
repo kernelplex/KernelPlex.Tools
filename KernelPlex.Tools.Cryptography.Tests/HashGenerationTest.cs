@@ -72,7 +72,7 @@ public class HashGenerationTest
     public void Verify_ShouldThrowIfSaltMissing()
     {
         var hashedPassword = HashGeneration.HashPassword("Hunter2", _pepper);
-        var parts = hashedPassword.Split('$', 2);
+        var parts = hashedPassword.Split(HashGeneration.SaltDelimiter, 2);
 
         var act = () => HashGeneration.Verify(parts[0], "Hunter2");
 
